@@ -21,8 +21,12 @@
     "test:base": "jest ",
     "test": "jest --maxWorkers=50%",
     "test:watch": "jest --watch --maxWorkers=25%",
+    "test:staged": "yarn test -- --findRelatedTests ./src",
     "test:ci": "jest --runInBand",
-    "test:staged": "yarn test -- --findRelatedTests ./tests"
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "test:e2e": "start-server-and-test dev 3000 cy:open",
+    "test:e2e:ci": "start-server-and-test start 3000 cy:run"
   },
   "dependencies": {
     "axios": "^0.21.4",
@@ -40,6 +44,7 @@
     "@storybook/addon-essentials": "^6.3.8",
     "@storybook/addon-links": "^6.3.8",
     "@storybook/react": "^6.3.8",
+    "@testing-library/cypress": "^8.0.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.1",
     "@types/axios": "^0.14.0",
@@ -55,10 +60,12 @@
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
     "cross-env": "^7.0.3",
+    "cypress": "^8.5.0",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.2",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-node": "^11.1.0",
@@ -79,6 +86,7 @@
     "prettier": "^2.4.1",
     "react-is": "^17.0.2",
     "rimraf": "^3.0.2",
+    "start-server-and-test": "^1.14.0",
     "tailwindcss": "^2.2.15",
     "ts-jest": "^27.0.5",
     "typescript": "4.4.3"
