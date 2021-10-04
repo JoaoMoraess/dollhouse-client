@@ -1,6 +1,6 @@
 import { Story, Meta } from '@storybook/react/types-6-0'
 
-import Headding from '.'
+import { Headding } from '.'
 
 export default {
   title: 'Headding',
