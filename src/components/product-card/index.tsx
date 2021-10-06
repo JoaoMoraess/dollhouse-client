@@ -3,7 +3,7 @@ import Image from 'next/image'
 export type ProductCardProps = {
   name: string
   imageUrl: string
-  price: string
+  price: number
 }
 
 const myLoader = ({ src }: { src: string }): string => {
