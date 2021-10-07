@@ -1,9 +1,18 @@
 import type { NextPage } from 'next'
 
-import { HomeTemplate } from 'templates/home'
+import { mock } from 'components/products-grid/mock'
+import { HomeTemplate, HomeTemplateProps } from 'templates/home'
 
-const Home: NextPage = () => {
-  return <HomeTemplate />
+const Home: NextPage<HomeTemplateProps> = (props) => {
+  return <HomeTemplate {...props} />
+}
+
+export async function getStaticProps (): Promise<any> {
+  return {
+    props: {
+      ...mock
+    }
+  }
 }
 
 export default Home
