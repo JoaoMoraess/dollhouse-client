@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "tailwind-storybook": "postcss ./src/application/styles/globals.css -o ./public/storybook/tailwind.storybook.css",
-    "tailwind-storybook-build": "NODE_ENV=production postcss ./src/application/styles/globals.css -o ./storybook-static/storybook/tailwind.storybook.css",
+    "tailwind-storybook": "postcss ./src/styles/globals.css -o ./public/storybook/tailwind.storybook.css",
+    "tailwind-storybook-build": "NODE_ENV=production postcss ./src/styles/globals.css -o ./storybook-static/storybook/tailwind.storybook.css",
     "storybook": "yarn tailwind-storybook && start-storybook -s ./public -p 6006",
     "build-storybook": "build-storybook && yarn tailwind-storybook-build",
     "build-stats": "cross-env ANALYZE=true yarn build",
@@ -88,6 +88,7 @@
     "react-is": "^17.0.2",
     "rimraf": "^3.0.2",
     "start-server-and-test": "^1.14.0",
+    "storybook-addon-next-router": "^3.0.8",
     "tailwindcss": "^2.2.15",
     "ts-jest": "^27.0.5",
     "typescript": "4.4.3"

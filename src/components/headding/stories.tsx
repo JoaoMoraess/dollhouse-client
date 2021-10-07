@@ -7,4 +7,4 @@ export default {
   component: Headding
 } as Meta
 
-export const Default: Story = () => <Headding />
+export const Default: Story = () => <Headding>Default Title</Headding>
