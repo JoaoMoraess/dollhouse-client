@@ -1,18 +1,30 @@
-type GetParams = { key: string }
-
-type Set = ({ key, value }: { key: string; value: object }) => void
 const APP_KEY = 'DOLLHOUSE'
 
-export const getLocalStorageItem = <T>({ key }: GetParams): T => {
-  if (typeof window === 'undefined') return
+type GetParams = { key: string }
+type SetParams = { key: string, value: object }
+type Set = ({ key, value }: SetParams) => void
 
-  const data = window.localStorage.getItem(`${APP_KEY}_${key}`)
-  return JSON.parse(data)
-}
+type Get = <T = any>({ key }: GetParams) => T
 
-export const setLocalStorageItem: Set = ({ key, value }) => {
-  if (typeof window === 'undefined') return
+export type LocalStorageAdapter = () => {set: Set, get: Get }
 
-  const data = JSON.stringify(value)
-  return window.localStorage.setItem(`${APP_KEY}_${key}`, data)
+export const localStorageAdapter: LocalStorageAdapter = () => {
+  const get: Get = ({ key }: GetParams) => {
+    if (typeof window === 'undefined') return
+
+    const data = window.localStorage.getItem(`${APP_KEY}_${key}`)
+    return JSON.parse(data)
+  }
+
+  const set: Set = ({ key, value }) => {
+    if (typeof window === 'undefined') return
+
+    const data = JSON.stringify(value)
+    return window.localStorage.setItem(`${APP_KEY}_${key}`, data)
+  }
+
+  return {
+    get,
+    set
+  }
 }
