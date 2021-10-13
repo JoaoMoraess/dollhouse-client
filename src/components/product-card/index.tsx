@@ -1,6 +1,7 @@
 import Image from 'next/image'
 
 import { useCart } from 'hooks/use-cart'
+import { formatPrice } from 'utils/format-price'
 
 export type ProductCardProps = {
   id: string
@@ -42,7 +43,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         )}
     <h2 className="bg-white text-xl text-center font-light pt-3">{name}</h2>
-    <h2 className="bg-white font-medium">R$ {price}</h2>
+    <h2 className="bg-white font-medium">{formatPrice(price)}</h2>
   </div>
   )
 }

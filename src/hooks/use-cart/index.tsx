@@ -3,10 +3,11 @@ import { createContext, useContext, useState, useEffect } from 'react'
 
 import { AxiosAdapter } from 'utils/adapters/axios'
 import { LocalStorageAdapter } from 'utils/adapters/local-storage'
+import { baseApiUrl } from 'utils/api'
 
 const CART_KEY = 'cartItems'
 
-export type ProductCartItems = {
+export type ProductCartItem = {
   id: string
   name: string
   imageUrl: string
@@ -15,8 +16,8 @@ export type ProductCartItems = {
 }
 
 type CartInfo = {
-  products: ProductCartItems[]
-  total: number
+  products: ProductCartItem[]
+  subTotal: number
 }
 export type CartContextData = {
   itemsCount: number
@@ -34,7 +35,7 @@ export const CartContextDefaultValues = {
   loading: false,
   cartInfo: {
     products: [],
-    total: 0
+    subTotal: 0
   },
   addToCart: () => null,
   removeFromCart: () => null,
@@ -51,7 +52,7 @@ type Quantity = number
 type LocalCartItems = { [id: string]: Quantity }
 
 const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ children }) => {
-  const [cartInfo, setCartInfo] = useState<CartInfo>({ products: [], total: 0 })
+  const [cartInfo, setCartInfo] = useState<CartInfo>({ products: [], subTotal: 0 })
   const [cartItems, setCartItems] = useState<LocalCartItems>({})
   const [loading, setLoading] = useState(false)
 
@@ -59,9 +60,14 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
     const data = localStorageAdapter().get<LocalCartItems>({ key: CART_KEY })
     if (data) {
       setCartItems(data)
-      getCartInfo().then((info) => setCartInfo(info))
     }
   }, [])
+
+  useEffect(() => {
+    getCartInfo().then((info) => {
+      if (info !== undefined) setCartInfo(info)
+    })
+  }, [cartItems])
 
   const saveCart = (cartItems: LocalCartItems): void => {
     setCartItems(cartItems)
@@ -78,11 +84,18 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
   }
 
   const getCartInfo = async (): Promise<CartInfo> => {
+    if (loading) return
+
     setLoading(true)
+
+    const localProducts = localStorageAdapter().get<LocalCartItems>({ key: CART_KEY })
+
     const { body } = await axiosAdapter<CartInfo>({
-      url: 'any_url', // TODO change
-      method: 'get',
-      body: cartItems
+      url: `${baseApiUrl}/cart/info`,
+      method: 'post',
+      body: {
+        localProducts
+      }
     })
     setLoading(false)
     return body

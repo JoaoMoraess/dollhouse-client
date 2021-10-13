@@ -3,12 +3,12 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { act } from 'react-dom/test-utils'
 
-import { CartProvider, Context, ProductCartItems, useCart } from '.'
+import { CartProvider, Context, ProductCartItem, useCart } from '.'
 import { productsCartMock } from './mock'
 
 describe('useCart', () => {
   let axiosAdapterMock: jest.Mock
-  let productsCart: ProductCartItems[]
+  let productsCart: ProductCartItem[]
   let wrapper: Context
   let Provider: Context
   let set: jest.Mock
@@ -16,6 +16,7 @@ describe('useCart', () => {
   let localStorageAdapterSpy: jest.Mock
 
   beforeEach(() => {
+    jest.clearAllMocks()
     productsCart = productsCartMock
     axiosAdapterMock = jest.fn().mockResolvedValue({
       statusCode: 200,
@@ -44,8 +45,8 @@ describe('useCart', () => {
     const hook = renderHook(() => useCart(), { wrapper })
     expect(hook.result.current.loading).toBe(true)
 
-    await hook.waitForNextUpdate()
     expect(axiosAdapterMock).toHaveBeenCalledTimes(1)
+    await hook.waitForNextUpdate()
 
     expect(hook.result.current.loading).toBe(false)
     expect(hook.result.current.isInCart('any_id')).toBeTruthy()

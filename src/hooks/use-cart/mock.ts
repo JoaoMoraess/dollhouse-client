@@ -1,7 +1,7 @@
 import faker from 'faker'
 
-import { ProductCartItems } from '.'
-export const productsCartMock: ProductCartItems[] = [
+import { ProductCartItem } from '.'
+export const productsCartMock: ProductCartItem[] = [
   {
     id: faker.datatype.number().toString(),
     name: faker.commerce.product(),

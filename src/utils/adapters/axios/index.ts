@@ -35,7 +35,7 @@ export const axiosAdapter: AxiosAdapter = async <T = any>(
       [`${data.method === 'get' ? 'params' : 'data'}`]: data.body,
       url: data.url,
       method: data.method,
-      headers: data.headers
+      headers: data?.headers
     })
   } catch (error) {
     axiosResponse = error.response
