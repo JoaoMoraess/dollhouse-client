@@ -17,7 +17,7 @@ export const Alert: React.FC<AlertProps> = ({
       <div className="shadow-lg flex gap-3 justify-between bg-white rounded overflow-hidden p-4 space-x-1">
         <div className="flex items-center">{getIcons(is)}</div>
         <div className="flex flex-grow items-center">
-          <p className="max-w-md leading-tight text-gray-800 text-xl">
+          <p className="max-w-md leading-tight font-light text-gray-800 text-sm">
             {message}
           </p>
         </div>
@@ -25,21 +25,17 @@ export const Alert: React.FC<AlertProps> = ({
           <button
             onClick={() => close()}
             type="button"
-            className="bg-indigo-300 bg-opacity-25 text-gray-700 rounded overflow-hidden p-1 lg:p-2 focus:outline-none"
+            className="bg-indigo-300 bg-opacity-25 text-gray-700 rounded overflow-hidden p-1 focus:outline-none"
           >
-            <svg className="h-4 w-auto" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              ></path>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
       </div>
       <div className="flex w-full items-end justify-end">
         <div
-          className={`transition-all ${getColors(is)} h-1 rounded-md`}
+          className={`transition-all ${getColors(is)} border-b-2 rounded-md`}
           style={{ width: `${percentVisible}%` }}
         ></div>
       </div>

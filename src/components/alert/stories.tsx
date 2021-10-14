@@ -10,6 +10,6 @@ export default {
   component: Alert
 } as Meta
 
-export const Default: Story<AlertProps> = (args) => <Alert {...args} />
+export const Default: Story<AlertProps> = (args) => (<Alert {...args} />)
 
 Default.args = mock

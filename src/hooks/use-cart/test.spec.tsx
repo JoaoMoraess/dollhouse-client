@@ -97,4 +97,40 @@ describe('useCart', () => {
     })
     expect(hook.result.current.itemsCount).toBe(0)
   })
+  it('should change quantity', async () => {
+    const hook = renderHook(() => useCart(), {
+      wrapper
+    })
+    act(() => {
+      hook.result.current.changeQuantity('any_id', 10, 3)
+    })
+    expect(hook.result.current.itemsCount).toBe(5)
+  })
+  it('should not change quantity if product does not exist', async () => {
+    const hook = renderHook(() => useCart(), {
+      wrapper
+    })
+    act(() => {
+      hook.result.current.changeQuantity('invalid_id', 10, 3)
+    })
+    expect(hook.result.current.itemsCount).toBe(4)
+  })
+  it('should not change quantity if value is negative', async () => {
+    const hook = renderHook(() => useCart(), {
+      wrapper
+    })
+    act(() => {
+      hook.result.current.changeQuantity('any_id', 99, -20)
+    })
+    expect(hook.result.current.itemsCount).toBe(4)
+  })
+  it('should max quantity is product stock', async () => {
+    const hook = renderHook(() => useCart(), {
+      wrapper
+    })
+    act(() => {
+      hook.result.current.changeQuantity('any_id', 2, 3)
+    })
+    expect(hook.result.current.itemsCount).toBe(4)
+  })
 })

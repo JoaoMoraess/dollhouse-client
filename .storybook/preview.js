@@ -1,4 +1,5 @@
 import { CartContext, CartContextDefaultValues } from 'hooks/use-cart'
+import {AlertContext, AlertContextDefaultValues} from 'hooks/use-alert'
 import '../.jest/next-image.mock'
 
 export const parameters = {
@@ -9,13 +10,20 @@ export const parameters = {
 
 export const decorators = [
   (Story, context) => (
-    <CartContext.Provider
+    <AlertContext.Provider
       value={{
-        ...CartContextDefaultValues,
-        ...(context?.args?.cartContextValue || {}),
+        ...AlertContextDefaultValues,
+        ...(context?.args?.alertContextValue || {}),
         ...context.args
       }}>
-      <Story />
-    </CartContext.Provider>
+      <CartContext.Provider
+        value={{
+          ...CartContextDefaultValues,
+          ...(context?.args?.cartContextValue || {}),
+          ...context.args
+        }}>
+        <Story />
+      </CartContext.Provider>
+    </AlertContext.Provider>
   )
 ]

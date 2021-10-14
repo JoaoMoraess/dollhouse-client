@@ -11,6 +11,7 @@ export const CART_KEY = 'cartItems'
 export type ProductCartItem = {
   id: string
   name: string
+  stock: number
   imageUrl: string
   price: number
   quantity: number
@@ -25,6 +26,7 @@ export type CartContextData = {
   isInCart: (id: string) => boolean
   loading: boolean
   getCartInfo: () => Promise<CartInfo>
+  changeQuantity: (id: string, stock: number, quantity?: number) => void
   addToCart: (id: string) => void
   removeFromCart: (id: string) => void
   clearCart: () => void
@@ -34,6 +36,7 @@ export const CartContextDefaultValues = {
   itemsCount: 0,
   isInCart: () => false,
   loading: false,
+  changeQuantity: () => null,
   getCartInfo: () => null,
   addToCart: () => null,
   removeFromCart: () => null,
@@ -118,6 +121,11 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
     open({ message: 'Produto removido do carrinho', is: 'info' })
   }
 
+  const changeQuantity = (id: string, stock: number, quantity: number): void => {
+    const isInTheCart = isInCart(id)
+    if (!isInTheCart || quantity > stock || !quantity || quantity <= 0) return
+    saveCart({ ...cartItems, [id]: quantity })
+  }
   const clearCart = (): void => {
     saveCart({})
     open({ message: 'Carrinho limpo', is: 'info' })
@@ -127,6 +135,7 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
       <CartContext.Provider
         value={{
           itemsCount,
+          changeQuantity,
           isInCart,
           getCartInfo,
           loading,
