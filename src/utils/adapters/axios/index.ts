@@ -9,10 +9,12 @@ export enum HttpStatusCode {
   notFound = 404,
   serverError = 500
 }
+
 export type HttpResponse<T> = {
   statusCode: HttpStatusCode
-  body?: T
+  body?: T & {error?: string}
 }
+
 export type HttpRequest = {
   url: string
   method: HttpMethod
@@ -26,9 +28,7 @@ export type AxiosAdapter = <T = any>(
   data: HttpRequest
 ) => Promise<HttpResponse<T>>
 
-export const axiosAdapter: AxiosAdapter = async <T = any>(
-  data: HttpRequest
-): Promise<HttpResponse<T>> => {
+export const axiosAdapter: AxiosAdapter = async (data) => {
   let axiosResponse: AxiosResponse
   try {
     axiosResponse = await axios.request({

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { createContext, useContext, useState, useEffect } from 'react'
 
+import { useAlert } from 'hooks/use-alert'
 import { AxiosAdapter } from 'utils/adapters/axios'
 import { LocalStorageAdapter } from 'utils/adapters/local-storage'
 import { baseApiUrl } from 'utils/api'
@@ -56,6 +57,8 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
   const [cartItems, setCartItems] = useState<LocalCartItems>({})
   const [loading, setLoading] = useState(false)
 
+  const { open } = useAlert()
+
   useEffect(() => {
     const data = localStorageAdapter().get<LocalCartItems>({ key: CART_KEY })
     if (data) {
@@ -98,6 +101,9 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
       }
     })
     setLoading(false)
+    if (body.error) {
+      open({ message: body.error, is: 'warning' })
+    }
     return body
   }
 
@@ -105,6 +111,7 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
     const isInTheCart = isInCart(id)
     if (isInTheCart) return
     saveCart({ ...cartItems, [id]: 1 })
+    open({ message: 'Produto adicionado ao carrinho', is: 'info' })
   }
 
   const removeFromCart = (id: string): void => {
@@ -117,10 +124,12 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
       }
     })
     saveCart(newCartItems)
+    open({ message: 'Produto removido do carrinho', is: 'info' })
   }
 
   const clearCart = (): void => {
     saveCart({})
+    open({ message: 'Carrinho limpo', is: 'info' })
   }
 
   return (
