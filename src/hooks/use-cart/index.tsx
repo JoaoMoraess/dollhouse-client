@@ -6,7 +6,7 @@ import { AxiosAdapter } from 'utils/adapters/axios'
 import { LocalStorageAdapter } from 'utils/adapters/local-storage'
 import { baseApiUrl } from 'utils/api'
 
-const CART_KEY = 'cartItems'
+export const CART_KEY = 'cartItems'
 
 export type ProductCartItem = {
   id: string
@@ -24,7 +24,7 @@ export type CartContextData = {
   itemsCount: number
   isInCart: (id: string) => boolean
   loading: boolean
-  cartInfo: CartInfo
+  getCartInfo: () => Promise<CartInfo>
   addToCart: (id: string) => void
   removeFromCart: (id: string) => void
   clearCart: () => void
@@ -34,10 +34,7 @@ export const CartContextDefaultValues = {
   itemsCount: 0,
   isInCart: () => false,
   loading: false,
-  cartInfo: {
-    products: [],
-    subTotal: 0
-  },
+  getCartInfo: () => null,
   addToCart: () => null,
   removeFromCart: () => null,
   clearCart: () => null
@@ -50,10 +47,9 @@ export type Context = (input: { children: React.ReactNode }) => JSX.Element
 export type UseCartContext = (axiosAdapter: AxiosAdapter, localStorageAdapter: LocalStorageAdapter) => Context
 
 type Quantity = number
-type LocalCartItems = { [id: string]: Quantity }
+export type LocalCartItems = { [id: string]: Quantity }
 
 const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ children }) => {
-  const [cartInfo, setCartInfo] = useState<CartInfo>({ products: [], subTotal: 0 })
   const [cartItems, setCartItems] = useState<LocalCartItems>({})
   const [loading, setLoading] = useState(false)
 
@@ -65,12 +61,6 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
       setCartItems(data)
     }
   }, [])
-
-  useEffect(() => {
-    getCartInfo().then((info) => {
-      if (info !== undefined) setCartInfo(info)
-    })
-  }, [cartItems])
 
   const saveCart = (cartItems: LocalCartItems): void => {
     setCartItems(cartItems)
@@ -100,6 +90,7 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
         localProducts
       }
     })
+
     setLoading(false)
     if (body.error) {
       open({ message: body.error, is: 'warning' })
@@ -137,7 +128,7 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
         value={{
           itemsCount,
           isInCart,
-          cartInfo,
+          getCartInfo,
           loading,
           addToCart,
           removeFromCart,

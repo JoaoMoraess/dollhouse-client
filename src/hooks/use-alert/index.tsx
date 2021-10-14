@@ -35,7 +35,6 @@ const AlertProvider: Context = ({ children }) => {
   let newPrecentVisible: number
 
   const timerPerform = (): void => {
-    console.log(newPrecentVisible)
     newPrecentVisible--
     setPercentVisible(newPrecentVisible)
   }

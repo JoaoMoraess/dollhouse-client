@@ -1,28 +1,37 @@
+import { useState, useEffect } from 'react'
+
 import { Headding } from 'components'
 import { CartList } from 'components/cart-list'
-import { useCart } from 'hooks/use-cart'
+import { ProductCartItem, useCart } from 'hooks/use-cart'
 
 import { BaseTemplate } from './base'
 
+type CartProps = {
+  products?: ProductCartItem[]
+  subTotal?: number
+}
+
 export const CartTemplate: React.FC = () => {
-  const { cartInfo, loading } = useCart()
+  const { getCartInfo, clearCart, itemsCount } = useCart()
+
+  const [cartProps, setCartProps] = useState<CartProps>({
+    products: [],
+    subTotal: 0
+  })
+  useEffect(() => {
+    void getCartInfo().then((info) => {
+      if (info !== undefined) setCartProps(info)
+    })
+  }, [itemsCount])
+
   return (
     <BaseTemplate>
-    <Headding>Veja nossos Produtos</Headding>
-      {loading
-        ? (
-          <div className="flex items-center justify-center">
-            <div className="w-20 h-20 rounded-full border-t-4 border-l-4 border-purple-600 animate-spin"></div>
-          </div>
-          )
-        : (
-        <>
-          <div className="w-2/4">
-            <CartList products={cartInfo?.products} />
-          </div>
-          <Headding>SubTotal: {cartInfo?.subTotal}</Headding>
-        </>
-          )}
+      <Headding>Veja nossos Produtos</Headding>
+      <button onClick={() => clearCart()}>Limpar Carrinho</button>
+      <div className="w-2/4">
+        <CartList products={cartProps.products} />
+      </div>
+      <Headding>SubTotal: {cartProps.subTotal}</Headding>
     </BaseTemplate>
   )
 }

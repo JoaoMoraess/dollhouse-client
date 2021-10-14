@@ -43,17 +43,7 @@ describe('useCart', () => {
 
   it('should return items and its info if there are any in the cart', async () => {
     const hook = renderHook(() => useCart(), { wrapper })
-    expect(hook.result.current.loading).toBe(true)
-
-    expect(axiosAdapterMock).toHaveBeenCalledTimes(1)
-    await hook.waitForNextUpdate()
-
-    expect(hook.result.current.loading).toBe(false)
     expect(hook.result.current.isInCart('any_id')).toBeTruthy()
-    expect(hook.result.current.cartInfo).toEqual({
-      products: productsCart,
-      total: 600
-    })
     expect(hook.result.current.itemsCount).toBe(4)
   })
 
@@ -62,7 +52,6 @@ describe('useCart', () => {
       wrapper
     })
 
-    expect(hook.result.current.loading).toBeTruthy()
     expect(hook.result.current.isInCart('invalid_id')).toBeFalsy()
     expect(hook.result.current.isInCart('any_id')).toBeTruthy()
   })
@@ -92,8 +81,6 @@ describe('useCart', () => {
       hook.result.current.removeFromCart('any_id')
     })
     expect(hook.result.current.itemsCount).toBe(2)
-
-    await hook.waitForNextUpdate()
 
     act(() => {
       hook.result.current.removeFromCart('other_id')

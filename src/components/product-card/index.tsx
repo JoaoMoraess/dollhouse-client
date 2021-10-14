@@ -2,6 +2,7 @@ import Image from 'next/image'
 
 import { useCart } from 'hooks/use-cart'
 import { formatPrice } from 'utils/format-price'
+import { imageLoader } from 'utils/image-loader'
 
 export type ProductCardProps = {
   id: string
@@ -10,9 +11,6 @@ export type ProductCardProps = {
   price: number
 }
 
-const myLoader = ({ src }: { src: string }): string => {
-  return `${src}`
-}
 export const ProductCard: React.FC<ProductCardProps> = ({
   id,
   name,
@@ -23,7 +21,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   return (
   <div data-testid="productCard" className="bg-skulls-pattern transition-all border-2 hover:border-pink-500 rounded-lg relative cursor-pointer group flex justify-between flex-col items-center">
     <Image
-      loader={myLoader}
+      loader={imageLoader}
       src={imageUrl}
       alt={name}
       layout="fixed"

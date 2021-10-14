@@ -2,6 +2,7 @@ import Image from 'next/image'
 
 import { useCart } from 'hooks/use-cart'
 import { formatPrice } from 'utils/format-price'
+import { imageLoader } from 'utils/image-loader'
 export type ProductsCartItemProps = {
   id: string
   name: string
@@ -9,9 +10,7 @@ export type ProductsCartItemProps = {
   price: number
   quantity: number
 }
-const myLoader = ({ src }: { src: string }): string => {
-  return `${src}`
-}
+
 export const ProductsCartItem: React.FC<ProductsCartItemProps> = ({
   id,
   name,
@@ -19,17 +18,17 @@ export const ProductsCartItem: React.FC<ProductsCartItemProps> = ({
   imageUrl,
   quantity
 }) => {
-  const { removeFromCart } = useCart()
+  const { removeFromCart } = (useCart())
   return (
   <div data-testid="productsCartItem">
     <div className="flex p-4 justify-between">
-      <Image loader={myLoader} src={imageUrl} height={110} width={100} alt={name} />
+      <Image loader={imageLoader} src={imageUrl} layout="fixed" height={110} width={100} alt={name} />
       <div className="pl-4 flex flex-col items-center justify-center">
         <h2>{name}</h2>
         <h2>R$ {price}</h2>
       </div>
       <div className="flex justify-center items-center">
-        <input value={quantity} className="border-2 border-gray-500 rounded-md w-20 outline-none" type="number" name="productqtd" id="" />
+        <input readOnly value={quantity} className="border-2 border-gray-500 rounded-md w-20 outline-none" type="number" name="productqtd" id="" />
       </div>
       <div className="flex justify-center items-center">
         {formatPrice(price * quantity)}
