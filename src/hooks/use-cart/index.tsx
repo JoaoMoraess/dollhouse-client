@@ -82,10 +82,11 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
   const getCartInfo = async (): Promise<CartInfo> => {
     if (loading) return
 
-    setLoading(true)
-
     const localProducts = localStorageAdapter().get<LocalCartItems>({ key: CART_KEY })
+    if (localProducts === undefined || localProducts === null) return
+    if (Object.keys(localProducts).length < 1) return
 
+    setLoading(true)
     const { body } = await axiosAdapter<CartInfo>({
       url: `${baseApiUrl}/cart/info`,
       method: 'post',
@@ -93,7 +94,6 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
         localProducts
       }
     })
-
     setLoading(false)
     if (body.error) {
       open({ message: body.error, is: 'warning' })
