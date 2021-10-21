@@ -28,7 +28,9 @@
         "prettier/prettier": "off",
         "space-before-function-paren": "error",
         "object-curly-spacing": "error",
+        "no-return-assign": "off",
         "array-bracket-spacing": "error",
+        "@typescript-eslint/no-unnecessary-type-assertion": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",
         "@typescript-eslint/restrict-template-expressions": "off",
         "react/destructuring-assignment": "off", // Vscode doesn't support automatically destructuring, it's a pain to add a new variable
