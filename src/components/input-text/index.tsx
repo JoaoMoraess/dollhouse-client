@@ -24,12 +24,12 @@ export const InputText: React.FC<InputTextProps> = ({
     !!onInputChange && onInputChange(newValue)
   }
   return (
-  <div className="flex flex-col gap-1" data-testid="inputTextWrapp">
+  <div className="w-full flex flex-col gap-1" data-testid="inputTextWrapp">
     {!!labelText && (
-      <label className={'cursor-pointer text-gray-800'} data-testid="inputTextLabel" htmlFor={name}>{labelText}</label>
+      <label className={'cursor-pointer text-xs text-gray-800'} data-testid="inputTextLabel" htmlFor={name}>{labelText}</label>
     )}
     <input
-      className={`shadow-md bg-gray-100 outline-none border-b-2 ${error ? 'border-red-600' : 'border-pink-600'} rounded-md pl-2 text-gray-800 font-light`}
+      className={`shadow-md bg-gray-200 outline-none border-b-2 ${error ? 'border-red-600' : 'border-pink-600'} rounded-md pl-2 text-gray-800 font-light`}
       data-testid="inputText"
       value={value}
       onChange={onChange}

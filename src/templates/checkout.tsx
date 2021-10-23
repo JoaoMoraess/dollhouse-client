@@ -35,7 +35,6 @@ export const CheckoutTemplate: React.FC = () => {
               <input type="number" className="w-12 outline-none pl-2" />
             </div>
           </div>
-
         </div>
       </div>
     </BaseTemplate>
