@@ -1,8 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/router'
 
-import { useCart } from 'hooks/use-cart'
+import { CardInfo, CardInfoForm, DeliveryLocationForm, DeliveryLocationInfo } from 'components'
+import { CART_KEY, LocalCartItems, useCart } from 'hooks/use-cart'
+import { axiosAdapter } from 'utils/adapters/axios'
+import { localStorageAdapter } from 'utils/adapters/local-storage'
+import { baseApiUrl } from 'utils/api'
 
 import { BaseTemplate } from './base'
 
@@ -13,29 +17,54 @@ export const CheckoutTemplate: React.FC = () => {
   useEffect(() => {
     if (itemsCount <= 0) void push('/')
   })
+
+  const [step, setStep] = useState< 1 | 2 | 3 >(1)
+
+  const [purchaseInfo, setPurchaseInfo] = useState<CardInfo & DeliveryLocationInfo>({
+    cep: '',
+    city: '',
+    district: '',
+    number: '',
+    aptoNumber: '',
+    isHouse: null,
+    cardHolderName: '',
+    cardNumber: '',
+    cardExpirationMoth: '',
+    cardExpirationYear: '',
+    cardSecurityCode: ''
+  })
+
+  const changeStep = (value: any, stepTo: 1 | 2 | 3): void => {
+    setPurchaseInfo((old) => ({ ...old, ...value }))
+    setStep(stepTo)
+  }
+
+  const confirmPurchase = async (): Promise<void> => {
+    const localProducts = localStorageAdapter().get<LocalCartItems>({ key: CART_KEY })
+    const info = { ...purchaseInfo, localProducts }
+    console.log(info)
+    const { statusCode } = await axiosAdapter({
+      method: 'post',
+      url: `${baseApiUrl}/effect-purchase`,
+      body: { ...purchaseInfo, localProducts, cardBrand: 'VISA' }
+    })
+    if (statusCode === 204) {
+      void push('/success')
+    }
+  }
+
   return (
     <BaseTemplate>
-      <div className="flex flex-col items-center justify-center">
-        <div className="bg-purple-600 gap-4 p-8 flex flex-col">
-          <div className="flex flex-col">
-            <span className="text-white">Nome</span>
-            <input type="text" className="outline-none pl-2" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-white">Numero do cartao</span>
-            <input type="number" className="outline-none pl-2" />
-          </div>
-          <div className="flex gap-3 items-center justify-between">
-            <div className="flex flex-col">
-              <span className="text-white">Data de vencimento</span>
-              <input type="text" className="w-40 outline-none pl-2" />
-            </div>
-            <div className="flex flex-col w-2/4">
-              <span className="text-white">CVC</span>
-              <input type="number" className="w-12 outline-none pl-2" />
-            </div>
-          </div>
-        </div>
+      <div className="flex h-full mt-16 items-center justify-center">
+        {step === 1 && (
+          <DeliveryLocationForm onFormSubmit={changeStep} />
+        )}
+        {step === 2 && (
+          <CardInfoForm onFormSubmit={changeStep} />
+        )}
+        {step === 3 && (
+          <button onClick={async () => await confirmPurchase()}>Confirmar compra</button>
+        )}
       </div>
     </BaseTemplate>
   )

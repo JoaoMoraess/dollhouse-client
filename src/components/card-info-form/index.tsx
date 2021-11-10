@@ -1,35 +1,58 @@
 import { useState } from 'react'
 
-import { InputText } from 'components'
+import { Button, InputText } from 'components'
+import { ArrowLeftIcon } from 'icons'
 
 export type CardInfoFormProps = {
-  onFormSubmit: (e) => Promise<void>
+  onFormSubmit: (e: any, setpTo: 1 | 2 | 3) => void
+}
+
+export type CardInfo = {
+  cardHolderName: string
+  cardNumber: string
+  cardExpirationYear: string
+  cardExpirationMoth: string
+  cardSecurityCode: string
 }
 
 export const CardInfoForm: React.FC<CardInfoFormProps> = ({
   onFormSubmit
 }) => {
-  const [cardInfo, setCardInfo] = useState({
-    cardName: '',
+  const [cardInfo, setCardInfo] = useState<CardInfo>({
+    cardHolderName: '',
     cardNumber: '',
-    cardExpiration: '',
-    cardCVC: ''
+    cardExpirationYear: '',
+    cardExpirationMoth: '',
+    cardSecurityCode: ''
   })
 
-  const submit = async (e: React.FormEvent): Promise<void> => {
+  const resetState = (): void => {
+    setCardInfo({
+      cardHolderName: '',
+      cardNumber: '',
+      cardExpirationYear: '',
+      cardExpirationMoth: '',
+      cardSecurityCode: ''
+    })
+  }
+
+  const submit = (e: React.FormEvent, setpTo: 1| 2 | 3): void => {
     e.preventDefault()
-    await onFormSubmit(cardInfo)
+    onFormSubmit(cardInfo, setpTo)
   }
 
   return (
   <div data-testid="cardInfoForm">
-    <form onSubmit={async (e) => await submit(e)}>
-      <div className="border-2 rounded-lg border-purple-600 gap-4 p-8 flex flex-col">
+    <form onSubmit={(e) => submit(e, 3)}>
+      <div className="border-2 rounded-lg relative border-purple-600 gap-4 p-8 pt-14 flex flex-col">
+        <div title="Voltar" onClick={(e) => submit(e, 1)} className="absolute top-3 left-3 cursor-pointer">
+          <ArrowLeftIcon />
+        </div>
         <InputText
           name="cardName"
-          value={cardInfo.cardName}
+          value={cardInfo.cardHolderName}
           labelText="Nome"
-          onInputChange={(e) => setCardInfo(old => ({ ...old, cardName: e }))}
+          onInputChange={(e) => setCardInfo(old => ({ ...old, cardHolderName: e }))}
         />
         <InputText
           name="cardNumber"
@@ -38,24 +61,33 @@ export const CardInfoForm: React.FC<CardInfoFormProps> = ({
           onInputChange={(e) => setCardInfo(old => ({ ...old, cardNumber: e }))}
         />
         <div className="flex items-center justify-between">
-          <div className="w-2/4">
+          <div className="w-2/4 flex flex-col gap-4">
             <InputText
               name="cardExpiration"
-              value={cardInfo.cardExpiration}
-              labelText="Data de validade"
-              onInputChange={(e) => setCardInfo(old => ({ ...old, cardExpiration: e }))}
+              value={cardInfo.cardExpirationYear}
+              labelText="Ano de vencimento"
+              onInputChange={(e) => setCardInfo(old => ({ ...old, cardExpirationYear: e }))}
+            />
+            <InputText
+              name="cardExpiration"
+              value={cardInfo.cardExpirationMoth}
+              labelText="Mes de vencimento"
+              onInputChange={(e) => setCardInfo(old => ({ ...old, cardExpirationMoth: e }))}
             />
           </div>
           <div className="w-20">
             <InputText
               name="cardCvc"
-              value={cardInfo.cardCVC}
+              value={cardInfo.cardSecurityCode}
               labelText="CVC"
-              onInputChange={(e) => setCardInfo(old => ({ ...old, cardCVC: e }))}
+              onInputChange={(e) => setCardInfo(old => ({ ...old, cardSecurityCode: e }))}
             />
           </div>
         </div>
-        <button type="submit">Enviar</button>
+        <div className="flex items-center justify-around pt-4">
+          <Button title="Refazer" onClick={resetState}>Refazer</Button>
+          <Button title="Enviar" type="submit">Enviar</Button>
+        </div>
       </div>
     </form>
   </div>
