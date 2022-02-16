@@ -15,7 +15,9 @@ export async function getServerSideProps (): Promise<any> {
     url: `${baseApiUrl}/products`,
     body: {
       limit: 10,
-      offset: 0
+      offset: 0,
+      orderBy: 'ASC',
+      sortBy: 'name'
     }
   })
   return {

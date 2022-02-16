@@ -25,7 +25,7 @@ export type CartContextData = {
   itemsCount: number
   isInCart: (id: string) => boolean
   loading: boolean
-  getCartInfo: () => Promise<CartInfo>
+  loadCartInfo: () => Promise<CartInfo>
   changeQuantity: (id: string, stock: number, quantity?: number) => void
   addToCart: (id: string) => void
   removeFromCart: (id: string) => void
@@ -37,7 +37,7 @@ export const CartContextDefaultValues = {
   isInCart: () => false,
   loading: false,
   changeQuantity: () => null,
-  getCartInfo: () => null,
+  loadCartInfo: () => null,
   addToCart: () => null,
   removeFromCart: () => null,
   clearCart: () => null
@@ -70,25 +70,19 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
     localStorageAdapter().set({ key: CART_KEY, value: cartItems })
   }
 
-  const itemsCount = Object.keys(cartItems)
-    .map((key) => cartItems[key])
-    .reduce((acc, itemQuantity) => acc + itemQuantity, 0)
+  const itemsCount = Object.values(cartItems).reduce((acc, curr) => acc + curr, 0)
 
-  const isInCart = (id: string): boolean => {
-    const keys = Object.keys(cartItems)
-    return keys.includes(id)
-  }
+  const isInCart = (id: string): boolean => cartItems[id] !== undefined
 
-  const getCartInfo = async (): Promise<CartInfo> => {
+  const loadCartInfo = async (): Promise<CartInfo> => {
     if (loading) return
 
     const localProducts = localStorageAdapter().get<LocalCartItems>({ key: CART_KEY })
-    if (localProducts === undefined || localProducts === null) return
-    if (Object.keys(localProducts).length < 1) return
+    if (localProducts === undefined || localProducts === null || Object.keys(localProducts).length < 1) return
 
     setLoading(true)
     const { body } = await axiosAdapter<CartInfo>({
-      url: `${baseApiUrl}/cart/info`,
+      url: `${baseApiUrl}/purchase/info`,
       method: 'post',
       body: {
         localProducts
@@ -102,15 +96,13 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
   }
 
   const addToCart = (id: string): void => {
-    const isInTheCart = isInCart(id)
-    if (isInTheCart) return
+    if (isInCart(id)) return
     saveCart({ ...cartItems, [id]: 1 })
     open({ message: 'Produto adicionado ao carrinho', is: 'info' })
   }
 
   const removeFromCart = (id: string): void => {
-    const isInTheCart = isInCart(id)
-    if (!isInTheCart) return
+    if (!isInCart(id)) return
     const newCartItems: LocalCartItems = {}
     Object.keys(cartItems).forEach((key) => {
       if (key !== id) {
@@ -122,10 +114,10 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
   }
 
   const changeQuantity = (id: string, stock: number, quantity: number): void => {
-    const isInTheCart = isInCart(id)
-    if (!isInTheCart || quantity > stock || !quantity || quantity <= 0) return
+    if (!isInCart(id) || quantity > stock || !quantity || quantity <= 0) return
     saveCart({ ...cartItems, [id]: quantity })
   }
+
   const clearCart = (): void => {
     saveCart({})
     open({ message: 'Carrinho limpo', is: 'info' })
@@ -137,7 +129,7 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
           itemsCount,
           changeQuantity,
           isInCart,
-          getCartInfo,
+          loadCartInfo,
           loading,
           addToCart,
           removeFromCart,

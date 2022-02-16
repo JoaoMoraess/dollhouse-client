@@ -16,7 +16,8 @@ type CartProps = {
 
 export const CartTemplate: React.FC = () => {
   const { push } = useRouter()
-  const { getCartInfo, clearCart, itemsCount } = useCart()
+
+  const { loadCartInfo, clearCart, itemsCount } = useCart()
   const [deliveryModalIsHidden, setDeliveryModalIsHidden] = useState(true)
   const [cartProps, setCartProps] = useState<CartProps>({
     products: [],
@@ -24,7 +25,7 @@ export const CartTemplate: React.FC = () => {
     total: 0
   })
   useEffect(() => {
-    void getCartInfo().then((info) => {
+    void loadCartInfo().then((info) => {
       if (info !== undefined) setCartProps(info)
     })
   }, [itemsCount])

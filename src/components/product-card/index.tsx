@@ -19,7 +19,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const { addToCart, isInCart, removeFromCart } = useCart()
   return (
-  <div data-testid="productCard" className="bg-skulls-pattern transition-all border-2 hover:border-pink-500 rounded-lg relative cursor-pointer group flex justify-between flex-col items-center">
+  <div data-testid="productCard" className="bg-skulls-pattern transition-all border-2 hover:border-pink-500 rounded-lg relative cursor-pointer group flex justify-between flex-col items-center overflow-hidden">
     <Image
       loader={imageLoader}
       src={imageUrl}

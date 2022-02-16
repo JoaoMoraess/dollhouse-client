@@ -1,10 +1,10 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState } from 'react'
 
-import { Alert as AlertComponent } from 'components/alert'
+import { AlertList } from 'components'
 
 export type AlertContextData = {
-  open: ({ is, message }: Alert) => void,
-  close: () => void
+  open: ({ is, message, timeVisibleInSeconds }: Alert) => void,
+  close: ({ message }: {message: string}) => void
 }
 
 export const AlertContextDefaultValues = {
@@ -19,50 +19,21 @@ export type Context = (input: { children: React.ReactNode }) => JSX.Element
 
 export type Alert = {
   message: string
-  is: 'danger' | 'warning' | 'success' | 'info' | ''
+  is: 'danger' | 'warning' | 'success' | 'info' | '',
+  timeVisibleInSeconds?: number
 }
 
 const AlertProvider: Context = ({ children }) => {
-  const [percentVisible, setPercentVisible] = useState(100)
-  const [timerId, setTimerId] = useState(null)
+  const [alerts, setAlerts] = useState<Alert[]>([])
 
-  const [isVisible, setIsvisible] = useState<boolean>(false)
-  const [alert, setAlert] = useState<Alert>({
-    is: '',
-    message: ''
-  })
-
-  let newPrecentVisible: number
-
-  const timerPerform = (): void => {
-    newPrecentVisible--
-    setPercentVisible(newPrecentVisible)
-  }
-  useEffect(() => {
-    if (isVisible) {
-      newPrecentVisible = percentVisible
-      const timer = setInterval(timerPerform, 50)
-      setTimerId(timer)
-    }
-  }, [isVisible])
-
-  useEffect(() => {
-    if (percentVisible <= 0) {
-      close()
-    }
-  }, [percentVisible])
-
-  const open = ({ is, message }: Alert): void => {
-    setIsvisible(true)
-    setAlert({ is, message })
+  const open = ({ is, message, timeVisibleInSeconds }: Alert): void => {
+    const duplicatedAlerts = alerts.find((alert) => alert.message === message)
+    if (duplicatedAlerts) return
+    setAlerts((old) => [...old, { is, message, timeVisibleInSeconds }])
   }
 
-  const close = (): void => {
-    clearTimeout(timerId)
-    setPercentVisible(100)
-    setAlert({ is: '', message: '' })
-    setIsvisible(false)
-    setTimerId(null)
+  const close = ({ message }: {message: string}): void => {
+    setAlerts((old) => old.filter((alert) => alert.message !== message))
   }
 
   return (
@@ -71,9 +42,7 @@ const AlertProvider: Context = ({ children }) => {
           open,
           close
         }}>
-        {isVisible && (
-          <AlertComponent {...alert} percentVisible={percentVisible} />
-        )}
+        <AlertList alerts={alerts} />
         {children}
       </AlertContext.Provider>
   )

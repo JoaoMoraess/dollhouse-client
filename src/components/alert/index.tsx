@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { useAlert } from 'hooks/use-alert'
 
 import { getColors, getIcons } from './alert-helper'
@@ -5,15 +7,20 @@ import { getColors, getIcons } from './alert-helper'
 export type AlertProps = {
   message: string
   is: 'danger' | 'warning' | 'success' | 'info' | '',
-  percentVisible: number
+  timeVisibleInSeconds?: number
 }
 
 export const Alert: React.FC<AlertProps> = ({
-  is, message, percentVisible
+  is, message, timeVisibleInSeconds = 3
 }) => {
   const { close } = useAlert()
+
+  useEffect(() => {
+    setTimeout(() => close({ message }), timeVisibleInSeconds * 1000)
+  }, [])
+
   return (
-    <div data-testid="alertComponent" className="z-50 fixed top-28 right-0">
+    <div data-testid="alertComponent" className='w-full pointer-events-auto+'>
       <div className="shadow-lg flex gap-3 justify-between bg-white rounded overflow-hidden p-4 space-x-1">
         <div className="flex items-center">{getIcons(is)}</div>
         <div className="flex flex-grow items-center">
@@ -23,7 +30,7 @@ export const Alert: React.FC<AlertProps> = ({
         </div>
         <div>
           <button
-            onClick={() => close()}
+            onClick={() => close({ message })}
             type="button"
             className="bg-indigo-300 bg-opacity-25 text-gray-700 rounded overflow-hidden p-1 focus:outline-none"
           >
@@ -35,8 +42,13 @@ export const Alert: React.FC<AlertProps> = ({
       </div>
       <div className="flex w-full items-end justify-end">
         <div
-          className={`transition-all ${getColors(is)} border-b-2 rounded-md`}
-          style={{ width: `${percentVisible}%` }}
+          className={`w-full ${getColors(is)} border-b-2 rounded-md`}
+          style={{
+            animationName: 'decrase-width',
+            animationDuration: `${timeVisibleInSeconds}s`,
+            animationFillMode: 'forwards',
+            animationTimingFunction: 'linear'
+          }}
         ></div>
       </div>
     </div>
