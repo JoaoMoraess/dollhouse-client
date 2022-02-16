@@ -21,7 +21,7 @@ export const Alert: React.FC<AlertProps> = ({
 
   return (
     <div data-testid="alertComponent" className='w-full pointer-events-auto+'>
-      <div className="shadow-lg flex gap-3 justify-between bg-white rounded overflow-hidden p-4 space-x-1">
+      <div className="shadow-lg flex gap-3 justify-between bg-white rounded overflow-hidden p-4 space-x-1 pointer-events-auto">
         <div className="flex items-center">{getIcons(is)}</div>
         <div className="flex flex-grow items-center">
           <p className="max-w-md leading-tight font-light text-gray-800 text-sm">

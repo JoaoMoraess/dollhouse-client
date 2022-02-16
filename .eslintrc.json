@@ -67,6 +67,7 @@
         "@typescript-eslint/member-delimiter-style": "off",
         "react-hooks/exhaustive-deps": "off",
         "react-hooks/rules-of-hooks": "off",
+        "react/display-name": "off",
         "unused-imports/no-unused-vars": [
           "error",
           { "argsIgnorePattern": "^_" }

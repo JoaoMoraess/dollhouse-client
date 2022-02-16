@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { createContext, useContext, useState, useEffect } from 'react'
 
 import { useAlert } from 'hooks/use-alert'
