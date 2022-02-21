@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { Button, InputText } from 'components'
-import { ArrowLeftIcon } from 'icons'
+import { ArrowLeftIcon, ArrowRightIcon, RefreshIcon } from 'icons'
 
 export type CardInfoFormProps = {
   onFormSubmit: (e: any, setpTo: 1 | 2 | 3) => void
@@ -44,7 +44,7 @@ export const CardInfoForm: React.FC<CardInfoFormProps> = ({
   return (
   <div data-testid="cardInfoForm">
     <form onSubmit={(e) => submit(e, 3)}>
-      <div className="border-2 rounded-lg relative border-purple-600 gap-4 p-8 pt-14 flex flex-col">
+      <div className="border-2 rounded-lg relative shadow-md gap-4 p-8 pt-14 flex flex-col">
         <div title="Voltar" onClick={(e) => submit(e, 1)} className="absolute top-3 left-3 cursor-pointer">
           <ArrowLeftIcon />
         </div>
@@ -85,8 +85,8 @@ export const CardInfoForm: React.FC<CardInfoFormProps> = ({
           </div>
         </div>
         <div className="flex items-center justify-around pt-4">
-          <Button title="Refazer" onClick={resetState}>Refazer</Button>
-          <Button title="Enviar" type="submit">Enviar</Button>
+          <Button title="Refazer" variant='secondary' icon={<RefreshIcon />} onClick={resetState} />
+          <Button title="Enviar" variant='secondary' icon={<ArrowRightIcon />} type="submit" />
         </div>
       </div>
     </form>

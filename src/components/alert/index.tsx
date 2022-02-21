@@ -11,12 +11,14 @@ export type AlertProps = {
 }
 
 export const Alert: React.FC<AlertProps> = ({
-  is, message, timeVisibleInSeconds = 3
+  is, message, timeVisibleInSeconds
 }) => {
   const { close } = useAlert()
 
   useEffect(() => {
-    setTimeout(() => close({ message }), timeVisibleInSeconds * 1000)
+    if (timeVisibleInSeconds !== null && timeVisibleInSeconds !== undefined) {
+      setTimeout(() => close({ message }), timeVisibleInSeconds * 1000)
+    }
   }, [])
 
   return (
@@ -44,10 +46,10 @@ export const Alert: React.FC<AlertProps> = ({
         <div
           className={`w-full ${getColors(is)} border-b-2 rounded-md`}
           style={{
-            animationName: 'decrase-width',
-            animationDuration: `${timeVisibleInSeconds}s`,
-            animationFillMode: 'forwards',
-            animationTimingFunction: 'linear'
+            animationName: `${timeVisibleInSeconds ? 'decrase-width' : 'none'}`,
+            animationDuration: `${timeVisibleInSeconds ? `${timeVisibleInSeconds}s` : 'unset'}`,
+            animationFillMode: `${timeVisibleInSeconds ? 'forwards' : 'unset'}`,
+            animationTimingFunction: `${timeVisibleInSeconds ? 'linear' : 'unset'}`
           }}
         ></div>
       </div>

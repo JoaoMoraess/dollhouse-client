@@ -6,7 +6,8 @@ export type ProductsGridProps = {
 
 export const ProductsGrid: React.FC<ProductsGridProps> = ({
   products
-}) => (
+}) => {
+  return (
   <div data-testid="productsGrid">
     <div className="mx-auto max-w-6xl grid grid-cols-4 gap-5">
       {products.map((product, key) => (
@@ -14,4 +15,5 @@ export const ProductsGrid: React.FC<ProductsGridProps> = ({
       ))}
     </div>
   </div>
-)
+  )
+}

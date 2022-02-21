@@ -20,11 +20,6 @@ module.exports = (plop) => {
         templateFile: 'templates/stories.tsx.hbs'
       },
       {
-        type: 'add',
-        path: '../src/components/{{dashCase name}}/test.spec.tsx',
-        templateFile: 'templates/test.spec.tsx.hbs'
-      },
-      {
         type: 'append',
         separator: '',
         path: '../src/components/index.ts',

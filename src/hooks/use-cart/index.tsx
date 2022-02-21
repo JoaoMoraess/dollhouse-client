@@ -57,6 +57,8 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
 
   const { open } = useAlert()
 
+  const timeAlertIsVisibleInSeconds = 3
+
   useEffect(() => {
     const data = localStorageAdapter().get<LocalCartItems>({ key: CART_KEY })
     if (data) {
@@ -89,7 +91,7 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
     })
     setLoading(false)
     if (body.error) {
-      open({ message: body.error, is: 'warning' })
+      open({ message: body.error, is: 'warning', timeVisibleInSeconds: timeAlertIsVisibleInSeconds })
     }
     return body
   }
@@ -97,7 +99,7 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
   const addToCart = (id: string): void => {
     if (isInCart(id)) return
     saveCart({ ...cartItems, [id]: 1 })
-    open({ message: 'Produto adicionado ao carrinho', is: 'info' })
+    open({ message: 'Produto adicionado ao carrinho', is: 'info', timeVisibleInSeconds: 3 })
   }
 
   const removeFromCart = (id: string): void => {
@@ -109,7 +111,7 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
       }
     })
     saveCart(newCartItems)
-    open({ message: 'Produto removido do carrinho', is: 'info' })
+    open({ message: 'Produto removido do carrinho', is: 'info', timeVisibleInSeconds: timeAlertIsVisibleInSeconds })
   }
 
   const changeQuantity = (id: string, stock: number, quantity: number): void => {
@@ -119,7 +121,7 @@ const CartProvider: UseCartContext = (axiosAdapter, localStorageAdapter) => ({ c
 
   const clearCart = (): void => {
     saveCart({})
-    open({ message: 'Carrinho limpo', is: 'info' })
+    open({ message: 'Carrinho limpo', is: 'info', timeVisibleInSeconds: timeAlertIsVisibleInSeconds })
   }
 
   return (

@@ -7,4 +7,4 @@ export default {
   component: AlertList
 } as Meta
 
-export const Default: Story = () => <AlertList />
+export const Default: Story = () => <AlertList alerts={[{ is: 'danger', message: 'Error Message!' }]} />

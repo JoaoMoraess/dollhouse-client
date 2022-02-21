@@ -5,13 +5,14 @@ import { InputFile } from 'components/input-file'
 import { useAlert } from 'hooks/use-alert'
 import { BaseTemplate } from 'templates/base'
 import { axiosAdapter, HttpStatusCode } from 'utils/adapters/axios'
+import { localStorageAdapter } from 'utils/adapters/local-storage'
 import { baseApiUrl } from 'utils/api'
 
 type AddProductsState = {
   name: string
   price: number
   description: string
-  file: {buffer: Buffer, mimeType: string}
+  file: {buffer: Buffer | null, mimeType: string}
   stock: number
 }
 
@@ -22,30 +23,31 @@ export const AdminProductTemplate: React.FC = () => {
     name: '',
     price: 0,
     description: '',
-    file: { buffer: Buffer.from([]), mimeType: '' },
+    file: { buffer: null, mimeType: '' },
     stock: 0
   })
-
+  const account = localStorageAdapter().get({ key: 'account' })
   const submitForm = async (e): Promise<void> => {
     e.preventDefault()
     const { statusCode, body } = await axiosAdapter({
       method: 'post',
       url: `${baseApiUrl}/products`,
-      body: addProductsState
+      body: addProductsState,
+      headers: { authorization: account?.token ?? '' }
     })
     if (statusCode === HttpStatusCode.noContent) {
       setAddProductsState({
         name: '',
         price: 0,
         description: '',
-        file: { buffer: Buffer.from([]), mimeType: '' },
+        file: { buffer: null, mimeType: '' },
         stock: 0
       })
-      open({ is: 'success', message: 'Produto adicionado com sucesso!' })
+      open({ is: 'success', message: 'Produto adicionado com sucesso!', timeVisibleInSeconds: 3 })
     } else if (statusCode === HttpStatusCode.serverError) {
-      open({ is: 'danger', message: 'Erro ao adicionar produto!' })
+      open({ is: 'danger', message: 'Erro ao adicionar produto!', timeVisibleInSeconds: 3 })
     } else {
-      open({ is: 'danger', message: body.error })
+      open({ is: 'danger', message: body.error, timeVisibleInSeconds: 3 })
     }
   }
 

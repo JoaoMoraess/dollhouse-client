@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { Button, InputText } from 'components'
+import { ArrowRightIcon, RefreshIcon } from 'icons'
 
 export type DeliveryLocationFormProps = {
   onFormSubmit: (e: any, stepTo: 1 | 2 | 3) => void
@@ -46,7 +47,7 @@ export const DeliveryLocationForm: React.FC<DeliveryLocationFormProps> = ({
   return (
   <div data-testid="deliveryLocationForm" className="w-96">
     <form onSubmit={(e) => submit(e, 2)}>
-      <div className="border-2 rounded-lg border-purple-600 gap-4 p-8 flex flex-col">
+      <div className="border-2 rounded-lg shadow-md gap-4 p-8 flex flex-col">
         <InputText
           name="city"
           value={location.city}
@@ -113,8 +114,8 @@ export const DeliveryLocationForm: React.FC<DeliveryLocationFormProps> = ({
           </div>
         )}
         <div className="flex items-center justify-around border-t-2 border-pink-600 pt-4">
-          <Button onClick={resetState}>Refazer</Button>
-          <Button type="submit">Enviar</Button>
+          <Button title="Refazer" variant='secondary' icon={<RefreshIcon />} onClick={resetState} />
+          <Button title="Enviar" variant='secondary' icon={<ArrowRightIcon />} type="submit" />
         </div>
       </div>
     </form>

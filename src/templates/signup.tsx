@@ -34,8 +34,8 @@ export const SignupTemplate: React.FC = () => {
       body: signupState
     })
 
-    if (statusCode === 200) open({ is: 'success', message: 'Signup successful' })
-    if (statusCode !== 200) open({ is: 'warning', message: 'Signup failed' })
+    if (statusCode === 200) open({ is: 'success', message: 'Signup successful', timeVisibleInSeconds: 3 })
+    if (statusCode !== 200) open({ is: 'warning', message: 'Signup failed', timeVisibleInSeconds: 3 })
     console.log(body)
   }
 

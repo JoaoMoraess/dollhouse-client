@@ -33,9 +33,9 @@ export const LoginTemplate: React.FC = () => {
       body: loginState
     })
 
-    if (statusCode !== 200) open({ is: 'warning', message: 'Login failed' })
+    if (statusCode !== 200) open({ is: 'warning', message: 'Login failed', timeVisibleInSeconds: 3 })
     if (statusCode === 200) {
-      open({ is: 'success', message: 'Login successful' })
+      open({ is: 'success', message: 'Login successful', timeVisibleInSeconds: 3 })
       auth({ name: body.name, token: body.token })
       await push('/')
     }
